@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum VehicleStatus {
+  DISPONIVEL
+  EM_USO
+  BAIXADA
+}
+
+enum ServiceStatus {
+  ABERTO
+  ENCERRADO
+}
+
+model Vehicle {
+  id         String        @id @default(cuid())
+  prefixo    String        @unique
+  modelo     String
+  patrimonio String
+  placa      String
+  status     VehicleStatus @default(DISPONIVEL)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  services   ServiceReport[]
+  discharges VehicleDischarge[]
+}
+
+model VehicleDischarge {
+  id             String    @id @default(cuid())
+  vehicleId      String
+  vehicle        Vehicle   @relation(fields: [vehicleId], references: [id])
+  dischargedAt   DateTime
+  returnedAt     DateTime?
+  motivo         String
+  numeroProcesso String
+  autorBaixa     String
+  destino        String
+  createdAt      DateTime  @default(now())
+}
+
+model ServiceReport {
+  id           String        @id @default(cuid())
+  reMilitar    String
+  nomeGuerra   String        @default("")
+  vehicleId    String
+  vehicle      Vehicle       @relation(fields: [vehicleId], references: [id])
+  kmInicial    Int
+  kmFinal      Int?
+  destino      String
+  missao       String
+  encarregado  String
+  observacoes  String?
+  novidades    String?
+  status       ServiceStatus @default(ABERTO)
+  startedAt    DateTime      @default(now())
+  endedAt      DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}

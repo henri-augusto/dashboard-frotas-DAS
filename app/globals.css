@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #201a17;
+  --color-secondary: #b8323a;
+  --color-surface: #f4efe7;
+  --color-panel: #fffaf2;
+  --color-border: #ded2c3;
+  --color-muted: #756a60;
+  --color-ink-soft: #4c4039;
+  --font-sans: var(--font-outfit), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-jetbrains), "SFMono-Regular", Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background:
+    radial-gradient(circle at top left, rgba(184, 50, 58, 0.12), transparent 32rem),
+    linear-gradient(135deg, rgba(32, 26, 23, 0.045) 25%, transparent 25%) 0 0 / 1.25rem 1.25rem,
+    var(--color-surface);
+  color: var(--color-primary);
+  min-height: 100dvh;
+  text-rendering: optimizeLegibility;
+}
+
+input,
+select,
+textarea,
+button {
+  font-size: 16px;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(184, 50, 58, 0.35);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: rgba(184, 50, 58, 0.2);
+}
+
+.surface-noise {
+  position: relative;
+  overflow: hidden;
+}
+
+.surface-noise::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(32, 26, 23, 0.08) 0.7px, transparent 0.7px),
+    radial-gradient(rgba(184, 50, 58, 0.08) 0.6px, transparent 0.6px);
+  background-position:
+    0 0,
+    0.7rem 0.7rem;
+  background-size: 1.4rem 1.4rem;
+  opacity: 0.28;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
