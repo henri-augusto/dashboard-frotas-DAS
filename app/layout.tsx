@@ -36,15 +36,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${outfit.variable} ${jetBrainsMono.variable} antialiased`}>
+      <body
+        className={`${outfit.variable} ${jetBrainsMono.variable} flex min-h-dvh flex-col antialiased`}
+      >
         <a
           href="#conteudo-principal"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
         >
           Ir para o conteúdo principal
         </a>
-        {children}
-        <footer className="mx-auto w-full max-w-5xl px-4 pb-8 pt-4 sm:px-6">
+        <div className="flex min-h-0 flex-1 flex-col">{children}</div>
+        <footer className="mx-auto w-full max-w-5xl shrink-0 px-4 pb-8 pt-4 sm:px-6">
           <div className="grid gap-4 border-t border-border/80 pt-5 text-center text-xs text-muted sm:grid-cols-[1fr_auto] sm:items-end sm:text-left">
             <div className="space-y-1 leading-relaxed">
               <p className="font-medium text-ink-soft">

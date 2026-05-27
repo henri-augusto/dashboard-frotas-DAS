@@ -10,9 +10,12 @@ export default async function AdminLoginPage() {
   if (admin) redirect("/admin");
 
   return (
-    <main id="conteudo-principal" className="flex min-h-dvh items-center justify-center px-4 py-8">
+    <main
+      id="conteudo-principal"
+      className="flex min-h-0 flex-1 flex-col items-center justify-center px-4 py-6"
+    >
       <div className="w-full max-w-md">
-        <div className="mb-6">
+        <div className="mb-5">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-secondary">
             DAS · DTIC
           </p>
@@ -26,7 +29,7 @@ export default async function AdminLoginPage() {
         </Card>
         <Link
           href="/"
-          className="mt-5 block text-center text-sm font-semibold text-muted transition-colors hover:text-primary"
+          className="mt-4 block text-center text-sm font-semibold text-muted transition-colors hover:text-primary"
         >
           Voltar ao formulário do usuário
         </Link>

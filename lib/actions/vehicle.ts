@@ -22,6 +22,7 @@ export type DashboardStats = {
   disponiveis: number;
   emUso: number;
   relatoriosAbertos: number;
+  relatoriosEncerrados: number;
   viaturaMaisUsada: { prefixo: string; totalUsos: number } | null;
   viaturasBaixadas: { id: string; prefixo: string; diasBaixada: number }[];
 };
@@ -42,6 +43,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     disponiveis,
     emUso,
     relatoriosAbertos,
+    relatoriosEncerrados,
     usageCounts,
     activeDischarges,
   ] = await Promise.all([
@@ -50,6 +52,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     prisma.vehicle.count({ where: { status: "DISPONIVEL" } }),
     prisma.vehicle.count({ where: { status: "EM_USO" } }),
     prisma.serviceReport.count({ where: { status: "ABERTO" } }),
+    prisma.serviceReport.count({ where: { status: "ENCERRADO" } }),
     prisma.serviceReport.groupBy({
       by: ["vehicleId"],
       _count: { vehicleId: true },
@@ -97,6 +100,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     disponiveis,
     emUso,
     relatoriosAbertos,
+    relatoriosEncerrados,
     viaturaMaisUsada,
     viaturasBaixadas,
   };

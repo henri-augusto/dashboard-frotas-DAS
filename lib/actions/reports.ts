@@ -43,3 +43,13 @@ export async function getServiceReports(filters?: {
     orderBy: { startedAt: "desc" },
   });
 }
+
+export async function getRecentServiceReports(limit = 3) {
+  await requireAdmin();
+
+  return prisma.serviceReport.findMany({
+    include: { vehicle: true },
+    orderBy: { startedAt: "desc" },
+    take: limit,
+  });
+}

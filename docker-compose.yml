@@ -1,0 +1,17 @@
+services:
+  app:
+    build: .
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      DATABASE_URL: "file:/data/app.db"
+      ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET:-altere-esta-chave-em-producao}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@das.local}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      RUN_DB_SEED: ${RUN_DB_SEED:-true}
+    volumes:
+      - app-data:/data
+    restart: unless-stopped
+
+volumes:
+  app-data:
