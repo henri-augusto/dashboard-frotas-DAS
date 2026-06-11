@@ -49,6 +49,7 @@ ENV NODE_ENV=production \
     HOSTNAME=0.0.0.0 \
     DATABASE_URL="file:/data/app.db"
 
+
 RUN addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 --ingroup nodejs nextjs \
   && mkdir -p /data \
