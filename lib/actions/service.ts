@@ -1,35 +1,13 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import {
   endServiceSchema,
   serviceLookupSchema,
   startServiceSchema,
 } from "@/lib/validations/service";
-
-export type ActionState = {
-  success: boolean;
-  message: string;
-  serviceId?: string;
-  errors?: Record<string, string[]>;
-};
-
-export type OpenServiceSummary = {
-  id: string;
-  prefixo: string;
-  destino: string;
-  missao: string;
-  startedAt: string;
-};
-
-export type ServiceLookupState = {
-  success: boolean;
-  message: string;
-  reMilitar?: string;
-  openServices?: OpenServiceSummary[];
-  errors?: Record<string, string[]>;
-};
+import type { ActionState, ServiceLookupState } from "./types";
+import { revalidateServicePaths } from "./revalidate";
 
 export async function getAvailableVehicles() {
   return prisma.vehicle.findMany({
@@ -145,8 +123,7 @@ export async function startService(
       });
     });
 
-    revalidatePath("/");
-    revalidatePath("/admin");
+    revalidateServicePaths();
 
     return {
       success: true,
@@ -216,8 +193,7 @@ export async function endService(
       }
     });
 
-    revalidatePath("/");
-    revalidatePath("/admin");
+    revalidateServicePaths();
 
     return {
       success: true,

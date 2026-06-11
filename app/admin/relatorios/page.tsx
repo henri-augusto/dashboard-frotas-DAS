@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import { getServiceReports } from "@/lib/actions/reports";
 import { getAllVehicles } from "@/lib/actions/vehicle";
@@ -17,8 +16,7 @@ export default async function AdminRelatoriosPage({
     to?: string;
   }>;
 }) {
-  const admin = await requireAdmin();
-  if (!admin) redirect("/admin/login");
+  await requireAdmin();
 
   const params = await searchParams;
   const [reports, vehicles] = await Promise.all([

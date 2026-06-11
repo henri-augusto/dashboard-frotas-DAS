@@ -3,18 +3,11 @@
 import { useActionState, useEffect } from "react";
 import type { Vehicle } from "@prisma/client";
 import { revertVehicleDischarge } from "@/lib/actions/vehicle";
-import type { ActionState } from "@/lib/actions/service";
+import { ACTION_INITIAL_STATE } from "@/lib/actions/types";
+import { todayInputValue } from "@/lib/utils/date";
+import { FormSuccessAlert } from "@/components/forms/form-success-alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-const initialState: ActionState = { success: false, message: "" };
-
-function todayInputValue() {
-  const now = new Date();
-  const offset = now.getTimezoneOffset();
-  const local = new Date(now.getTime() - offset * 60_000);
-  return local.toISOString().slice(0, 10);
-}
 
 export function VehicleDischargeReturnForm({
   vehicle,
@@ -27,7 +20,7 @@ export function VehicleDischargeReturnForm({
 }) {
   const [state, formAction, pending] = useActionState(
     revertVehicleDischarge,
-    initialState
+    ACTION_INITIAL_STATE
   );
 
   useEffect(() => {
@@ -35,11 +28,7 @@ export function VehicleDischargeReturnForm({
   }, [state.success, onSuccess]);
 
   if (state.success) {
-    return (
-      <div className="rounded-xl border border-[#bdd2b7] bg-[#e6efe2] px-3.5 py-3 text-sm font-medium text-[#385f36]">
-        {state.message}
-      </div>
-    );
+    return <FormSuccessAlert message={state.message} />;
   }
 
   return (

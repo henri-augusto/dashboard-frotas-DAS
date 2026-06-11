@@ -2,14 +2,15 @@
 
 import { useActionState } from "react";
 import { loginAdmin } from "@/lib/actions/auth";
-import type { ActionState } from "@/lib/actions/service";
+import { ACTION_INITIAL_STATE } from "@/lib/actions/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-const initialState: ActionState = { success: false, message: "" };
-
 export function LoginForm() {
-  const [state, formAction, pending] = useActionState(loginAdmin, initialState);
+  const [state, formAction, pending] = useActionState(
+    loginAdmin,
+    ACTION_INITIAL_STATE
+  );
 
   return (
     <form action={formAction} className="flex flex-col gap-4">

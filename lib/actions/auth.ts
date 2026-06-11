@@ -8,7 +8,7 @@ import {
   verifyPassword,
 } from "@/lib/auth";
 import { loginSchema } from "@/lib/validations/auth";
-import type { ActionState } from "./service";
+import type { ActionState } from "./types";
 
 export async function loginAdmin(
   _prev: ActionState,

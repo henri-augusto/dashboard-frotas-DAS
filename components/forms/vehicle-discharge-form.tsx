@@ -3,19 +3,12 @@
 import { useActionState, useEffect } from "react";
 import type { Vehicle } from "@prisma/client";
 import { dischargeVehicle } from "@/lib/actions/vehicle";
-import type { ActionState } from "@/lib/actions/service";
+import { ACTION_INITIAL_STATE } from "@/lib/actions/types";
+import { todayInputValue } from "@/lib/utils/date";
+import { FormSuccessAlert } from "@/components/forms/form-success-alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
-const initialState: ActionState = { success: false, message: "" };
-
-function todayInputValue() {
-  const now = new Date();
-  const offset = now.getTimezoneOffset();
-  const local = new Date(now.getTime() - offset * 60_000);
-  return local.toISOString().slice(0, 10);
-}
 
 export function VehicleDischargeForm({
   vehicle,
@@ -26,18 +19,17 @@ export function VehicleDischargeForm({
   onSuccess?: () => void;
   onCancel: () => void;
 }) {
-  const [state, formAction, pending] = useActionState(dischargeVehicle, initialState);
+  const [state, formAction, pending] = useActionState(
+    dischargeVehicle,
+    ACTION_INITIAL_STATE
+  );
 
   useEffect(() => {
     if (state.success) onSuccess?.();
   }, [state.success, onSuccess]);
 
   if (state.success) {
-    return (
-      <div className="rounded-xl border border-[#bdd2b7] bg-[#e6efe2] px-3.5 py-3 text-sm font-medium text-[#385f36]">
-        {state.message}
-      </div>
-    );
+    return <FormSuccessAlert message={state.message} />;
   }
 
   return (

@@ -1,5 +1,6 @@
 import PDFDocument from "pdfkit";
 import type { ServiceReport, Vehicle } from "@prisma/client";
+import { formatReportDate } from "@/lib/utils/date";
 
 type ServiceWithVehicle = ServiceReport & { vehicle: Vehicle };
 
@@ -15,13 +16,6 @@ const COLORS = {
 const MARGIN = 48;
 const FOOTER_RESERVE = 78;
 
-function formatDateTime(d: Date) {
-  return new Intl.DateTimeFormat("pt-BR", {
-    dateStyle: "short",
-    timeStyle: "short",
-  }).format(d);
-}
-
 function contentWidth(doc: InstanceType<typeof PDFDocument>) {
   return doc.page.width - MARGIN * 2;
 }
@@ -29,7 +23,7 @@ function contentWidth(doc: InstanceType<typeof PDFDocument>) {
 function drawFooter(doc: InstanceType<typeof PDFDocument>) {
   const width = contentWidth(doc);
   const footerTop = doc.page.height - MARGIN - FOOTER_RESERVE + 18;
-  const generatedAt = formatDateTime(new Date());
+  const generatedAt = formatReportDate(new Date());
 
   doc
     .save()
@@ -211,10 +205,10 @@ export function generateServiceReportPdf(
 
     addSection(doc, "Identificação", [
       ["ServiceID", service.id],
-      ["Início", formatDateTime(service.startedAt)],
+      ["Início", formatReportDate(service.startedAt)],
       [
         "Fim",
-        service.endedAt ? formatDateTime(service.endedAt) : "—",
+        service.endedAt ? formatReportDate(service.endedAt) : "—",
       ],
     ]);
 

@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import { getRecentServiceReports } from "@/lib/actions/reports";
 import { getDashboardStats } from "@/lib/actions/vehicle";
@@ -30,8 +29,7 @@ function DashboardSection({
 }
 
 export default async function AdminDashboardPage() {
-  const admin = await requireAdmin();
-  if (!admin) redirect("/admin/login");
+  await requireAdmin();
 
   const [stats, recentReports] = await Promise.all([
     getDashboardStats(),

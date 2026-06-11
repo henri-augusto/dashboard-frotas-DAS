@@ -3,25 +3,17 @@
 import { useActionState, useState } from "react";
 import type { Vehicle } from "@prisma/client";
 import { updateVehicleStatus } from "@/lib/actions/vehicle";
-import type { ActionState } from "@/lib/actions/service";
+import { ACTION_INITIAL_STATE } from "@/lib/actions/types";
+import {
+  VEHICLE_STATUS_COLORS,
+  VEHICLE_STATUS_LABELS,
+  VEHICLE_STATUS_OPTIONS,
+} from "@/lib/constants/vehicle-status";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/select";
 import { VehicleDischargeForm } from "@/components/forms/vehicle-discharge-form";
 import { VehicleDischargeReturnForm } from "@/components/forms/vehicle-discharge-return-form";
-
-const statusLabels: Record<string, string> = {
-  DISPONIVEL: "Disponível",
-  EM_USO: "Em uso",
-  BAIXADA: "Baixada",
-};
-
-const statusColors: Record<string, string> = {
-  DISPONIVEL: "bg-[#e6efe2] text-[#385f36] ring-[#bdd2b7]",
-  EM_USO: "bg-[#e6edf3] text-[#315f7d] ring-[#bfd0dc]",
-  BAIXADA: "bg-secondary/10 text-secondary ring-secondary/20",
-};
-
-const initialState: ActionState = { success: false, message: "" };
 
 function DischargedVehicleActions({ vehicle }: { vehicle: Vehicle }) {
   const [returnOpen, setReturnOpen] = useState(false);
@@ -55,11 +47,16 @@ function DischargedVehicleActions({ vehicle }: { vehicle: Vehicle }) {
 function StatusForm({ vehicle }: { vehicle: Vehicle }) {
   const [state, formAction, pending] = useActionState(
     updateVehicleStatus,
-    initialState
+    ACTION_INITIAL_STATE
   );
   const [selectedStatus, setSelectedStatus] = useState(vehicle.status);
   const [dischargeOpen, setDischargeOpen] = useState(false);
   const [dischargeKey, setDischargeKey] = useState(0);
+
+  const statusOptions = VEHICLE_STATUS_OPTIONS.map((opt) => ({
+    value: opt.value,
+    label: opt.label,
+  }));
 
   const handleStatusChange = (nextStatus: Vehicle["status"]) => {
     if (nextStatus === "BAIXADA" && vehicle.status !== "BAIXADA") {
@@ -85,30 +82,28 @@ function StatusForm({ vehicle }: { vehicle: Vehicle }) {
 
   return (
     <>
-      <form action={formAction} className="flex flex-wrap items-center gap-2">
+      <form action={formAction} className="flex flex-wrap items-end gap-2">
         <input type="hidden" name="vehicleId" value={vehicle.id} />
-        <select
-          name="status"
-          value={selectedStatus}
-          onChange={(event) =>
-            handleStatusChange(event.target.value as Vehicle["status"])
-          }
-          className="min-h-11 rounded-xl border border-border bg-panel/85 px-3 text-sm font-medium text-primary transition duration-200 focus:border-primary/50"
-        >
-          <option value="DISPONIVEL">Disponível</option>
-          <option value="EM_USO">Em uso</option>
-          <option value="BAIXADA">Baixada</option>
-        </select>
-        <button
+        <div className="min-w-[10rem] flex-1">
+          <Select
+            name="status"
+            label="Status"
+            options={statusOptions}
+            value={selectedStatus}
+            onChange={(event) =>
+              handleStatusChange(event.target.value as Vehicle["status"])
+            }
+          />
+        </div>
+        <Button
           type="submit"
           disabled={pending || selectedStatus === vehicle.status}
-          className="min-h-11 cursor-pointer rounded-xl bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm shadow-primary/10 transition duration-200 hover:bg-[#332822] active:translate-y-px disabled:translate-y-0 disabled:opacity-50"
         >
           {pending ? "..." : "Atualizar"}
-        </button>
+        </Button>
         {state.message && (
           <span
-            className={`text-xs ${state.success ? "text-[#346538]" : "text-secondary"}`}
+            className={`w-full text-xs ${state.success ? "text-[#346538]" : "text-secondary"}`}
           >
             {state.message}
           </span>
@@ -153,9 +148,9 @@ export function VehicleList({ vehicles }: { vehicles: Vehicle[] }) {
                 {v.prefixo}
               </h3>
               <span
-                className={`rounded-md px-2 py-0.5 text-xs font-semibold uppercase tracking-[0.16em] ring-1 ${statusColors[v.status]}`}
+                className={`rounded-md px-2 py-0.5 text-xs font-semibold uppercase tracking-[0.16em] ring-1 ${VEHICLE_STATUS_COLORS[v.status]}`}
               >
-                {statusLabels[v.status]}
+                {VEHICLE_STATUS_LABELS[v.status]}
               </span>
             </div>
             <p className="mt-1 text-sm text-muted">

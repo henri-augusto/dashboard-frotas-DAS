@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import { getAllVehicles } from "@/lib/actions/vehicle";
 import { CreateVehicleModal } from "@/components/admin/create-vehicle-modal";
@@ -6,8 +5,7 @@ import { VehicleList } from "@/components/admin/vehicle-list";
 import { PageHeader } from "@/components/layout/page-header";
 
 export default async function AdminViaturasPage() {
-  const admin = await requireAdmin();
-  if (!admin) redirect("/admin/login");
+  await requireAdmin();
 
   const vehicles = await getAllVehicles();
 

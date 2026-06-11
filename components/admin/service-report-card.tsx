@@ -1,5 +1,9 @@
 import Link from "next/link";
 import type { ServiceReport, Vehicle } from "@prisma/client";
+import {
+  SERVICE_STATUS_COLORS,
+  SERVICE_STATUS_LABELS,
+} from "@/lib/constants/vehicle-status";
 import { formatReportDate } from "@/lib/utils/date";
 
 type ReportWithVehicle = ServiceReport & { vehicle: Vehicle };
@@ -7,13 +11,9 @@ type ReportWithVehicle = ServiceReport & { vehicle: Vehicle };
 function StatusBadge({ status }: { status: ServiceReport["status"] }) {
   return (
     <span
-      className={`rounded-md px-2 py-0.5 text-xs font-semibold uppercase tracking-[0.16em] ring-1 ${
-        status === "ABERTO"
-          ? "bg-[#e6edf3] text-[#315f7d] ring-[#bfd0dc]"
-          : "bg-[#e6efe2] text-[#385f36] ring-[#bdd2b7]"
-      }`}
+      className={`rounded-md px-2 py-0.5 text-xs font-semibold uppercase tracking-[0.16em] ring-1 ${SERVICE_STATUS_COLORS[status]}`}
     >
-      {status === "ABERTO" ? "Aberto" : "Encerrado"}
+      {SERVICE_STATUS_LABELS[status]}
     </span>
   );
 }

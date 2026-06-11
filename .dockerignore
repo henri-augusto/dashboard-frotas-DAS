@@ -1,19 +1,40 @@
+# Dependências e artefatos de build
 node_modules
 .next
 out
 build
+dist
+coverage
+
+# Git e CI
 .git
 .github
+.gitignore
+
+# Ambiente e segredos
 .env
 .env.*
 !.env.example
+
+# Documentação e tooling local
 *.md
 .agents
 .cursor
-coverage
+skills-lock.json
+DOCUMENTACAO.md
+
+# Banco local
+prisma/*.db
+prisma/*.db-journal
+
+# Logs e SO
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .DS_Store
-prisma/*.db
-prisma/*.db-journal
+Thumbs.db
+
+# Docker (contexto não precisa de si mesmo)
+Dockerfile*
+docker-compose*.yml
+.dockerignore

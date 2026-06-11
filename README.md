@@ -40,6 +40,8 @@ ADMIN_EMAIL="admin@das.local"
 ADMIN_PASSWORD="admin123"
 ```
 
+`ADMIN_SESSION_SECRET` é obrigatório em produção. Após atualizações de segurança da sessão, faça login novamente no painel admin (cookies antigos deixam de valer).
+
 ## Cores
 
 - Primária: `#333`

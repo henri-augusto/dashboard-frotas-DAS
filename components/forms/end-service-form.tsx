@@ -2,12 +2,11 @@
 
 import { useActionState } from "react";
 import Link from "next/link";
-import { endService, type ActionState } from "@/lib/actions/service";
+import { endService } from "@/lib/actions/service";
+import { ACTION_INITIAL_STATE } from "@/lib/actions/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
-const initialState: ActionState = { success: false, message: "" };
 
 export function EndServiceForm({
   serviceId,
@@ -18,7 +17,10 @@ export function EndServiceForm({
   kmInicial: number;
   prefixo: string;
 }) {
-  const [state, formAction, pending] = useActionState(endService, initialState);
+  const [state, formAction, pending] = useActionState(
+    endService,
+    ACTION_INITIAL_STATE
+  );
 
   if (state.success) {
     const reportHref = state.serviceId
