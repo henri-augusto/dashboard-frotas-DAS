@@ -21,10 +21,10 @@ export function LoginForm() {
       )}
       <Input
         name="email"
-        label="E-mail"
-        type="email"
+        label="Usuário"
+        type="text"
         required
-        autoComplete="email"
+        autoComplete="username"
         error={state.errors?.email?.[0]}
       />
       <Input

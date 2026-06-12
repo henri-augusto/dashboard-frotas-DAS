@@ -27,8 +27,7 @@ COPY app ./app
 COPY components ./components
 COPY lib ./lib
 
-ENV DATABASE_URL="file:./build.db"
-RUN npx prisma generate && npx prisma db push
+RUN npx prisma generate
 RUN npm run build
 
 # CLI mínima para migrate/seed em runtime (sem devDependencies do projeto)
@@ -46,14 +45,10 @@ WORKDIR /app
 
 ENV NODE_ENV=production \
     PORT=7000 \
-    HOSTNAME=0.0.0.0 \
-    DATABASE_URL="file:/data/app.db"
-
+    HOSTNAME=0.0.0.0
 
 RUN addgroup --system --gid 1001 nodejs \
-  && adduser --system --uid 1001 --ingroup nodejs nextjs \
-  && mkdir -p /data \
-  && chown nextjs:nodejs /data
+  && adduser --system --uid 1001 --ingroup nodejs nextjs
 
 COPY --from=migrator --chown=nextjs:nodejs /cli /cli
 COPY --from=builder /app/public ./public

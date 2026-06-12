@@ -33,12 +33,12 @@ export async function loginAdmin(
   });
 
   if (!admin) {
-    return { success: false, message: "E-mail ou senha incorretos." };
+    return { success: false, message: "Usuário ou senha incorretos." };
   }
 
   const valid = await verifyPassword(parsed.data.password, admin.passwordHash);
   if (!valid) {
-    return { success: false, message: "E-mail ou senha incorretos." };
+    return { success: false, message: "Usuário ou senha incorretos." };
   }
 
   await createAdminSession(admin.id);
