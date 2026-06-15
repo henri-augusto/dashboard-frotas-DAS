@@ -27,6 +27,8 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
+export const dynamic = "force-dynamic";
+
 const systemVersion = packageInfo.version;
 
 export default function RootLayout({

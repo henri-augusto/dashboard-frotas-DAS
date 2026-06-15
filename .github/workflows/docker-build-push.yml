@@ -51,6 +51,5 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             NODE_VERSION=22-alpine
-            DATABASE_URL=${{ secrets.production.DATABASE_URL }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

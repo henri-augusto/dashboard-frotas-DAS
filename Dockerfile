@@ -18,8 +18,6 @@ RUN --mount=type=cache,target=/root/.npm \
 
 # Build da aplicação (sem migração de banco — isso roda no entrypoint em runtime)
 FROM base AS builder
-ARG DATABASE_URL
-ENV DATABASE_URL=${DATABASE_URL}
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/node_modules/.prisma ./node_modules/.prisma
 COPY package.json package-lock.json next.config.ts tsconfig.json postcss.config.mjs middleware.ts ./
