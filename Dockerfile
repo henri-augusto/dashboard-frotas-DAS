@@ -30,14 +30,13 @@ COPY lib ./lib
 RUN npx prisma generate
 RUN npm run build
 
-# CLI mínima para migrate/seed em runtime (sem devDependencies do projeto)
+# CLI mínima só para prisma migrate deploy (sem Next/React/pdfkit duplicados)
 FROM base AS migrator
 WORKDIR /cli
-COPY package.json package-lock.json ./
+COPY docker/migrate-package.json ./package.json
 COPY prisma ./prisma
 RUN --mount=type=cache,target=/root/.npm \
-    npm ci --omit=dev --ignore-scripts && \
-    npm install --no-save prisma@^6.8.2 tsx@^4.19.4 && \
+    npm install --omit=dev && \
     npm cache clean --force
 
 FROM base AS runner

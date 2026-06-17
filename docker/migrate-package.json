@@ -1,0 +1,7 @@
+{
+  "name": "controle-viaturas-migrate",
+  "private": true,
+  "dependencies": {
+    "prisma": "^6.8.2"
+  }
+}

@@ -7,8 +7,7 @@ if [ -z "$DATABASE_URL" ]; then
 fi
 
 cd /cli
-npx --yes prisma generate
-npx --yes prisma migrate deploy
+./node_modules/.bin/prisma migrate deploy
 
 cd /app
 exec node server.js
