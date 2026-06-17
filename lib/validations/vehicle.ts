@@ -8,6 +8,14 @@ export const vehicleSchema = z.object({
   status: z.enum(["DISPONIVEL", "EM_USO", "BAIXADA"]).default("DISPONIVEL"),
 });
 
+export const updateVehicleSchema = z.object({
+  vehicleId: z.string().min(1),
+  prefixo: z.string().min(1, "Informe o prefixo"),
+  modelo: z.string().min(1, "Informe o modelo"),
+  patrimonio: z.string().min(1, "Informe o patrimônio"),
+  placa: z.string().min(7, "Informe a placa"),
+});
+
 export const updateVehicleStatusSchema = z.object({
   vehicleId: z.string().min(1),
   status: z.enum(["DISPONIVEL", "EM_USO", "BAIXADA"]),

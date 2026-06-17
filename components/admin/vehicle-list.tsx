@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { VehicleDischargeForm } from "@/components/forms/vehicle-discharge-form";
 import { VehicleDischargeReturnForm } from "@/components/forms/vehicle-discharge-return-form";
+import { EditVehicleModal } from "@/components/admin/edit-vehicle-modal";
 
 function DischargedVehicleActions({ vehicle }: { vehicle: Vehicle }) {
   const [returnOpen, setReturnOpen] = useState(false);
@@ -21,8 +22,13 @@ function DischargedVehicleActions({ vehicle }: { vehicle: Vehicle }) {
 
   return (
     <>
-      <Button type="button" onClick={() => setReturnOpen(true)}>
-        Retorno da baixa
+      <Button
+        type="button"
+        variant="ghost"
+        className="min-h-9 shrink-0 px-3 text-sm"
+        onClick={() => setReturnOpen(true)}
+      >
+        Retorno
       </Button>
 
       <Modal
@@ -82,33 +88,33 @@ function StatusForm({ vehicle }: { vehicle: Vehicle }) {
 
   return (
     <>
-      <form action={formAction} className="flex flex-wrap items-end gap-2">
-        <input type="hidden" name="vehicleId" value={vehicle.id} />
-        <div className="min-w-[10rem] flex-1">
-          <Select
-            name="status"
-            label="Status"
-            options={statusOptions}
-            value={selectedStatus}
-            onChange={(event) =>
-              handleStatusChange(event.target.value as Vehicle["status"])
-            }
-          />
-        </div>
-        <Button
-          type="submit"
-          disabled={pending || selectedStatus === vehicle.status}
-        >
-          {pending ? "..." : "Atualizar"}
-        </Button>
-        {state.message && (
-          <span
-            className={`w-full text-xs ${state.success ? "text-[#346538]" : "text-secondary"}`}
+      <div className="flex flex-col items-end gap-1">
+        <form action={formAction} className="flex items-center gap-1.5">
+          <input type="hidden" name="vehicleId" value={vehicle.id} />
+          <div className="w-[7.5rem] [&_label]:sr-only [&_select]:min-h-9 [&_select]:py-1.5 [&_select]:text-sm">
+            <Select
+              name="status"
+              label="Status"
+              options={statusOptions}
+              value={selectedStatus}
+              onChange={(event) =>
+                handleStatusChange(event.target.value as Vehicle["status"])
+              }
+            />
+          </div>
+          <Button
+            type="submit"
+            variant="ghost"
+            className="min-h-9 shrink-0 px-2.5 text-sm"
+            disabled={pending || selectedStatus === vehicle.status}
           >
-            {state.message}
-          </span>
+            {pending ? "..." : "OK"}
+          </Button>
+        </form>
+        {state.message && !state.success && (
+          <p className="text-[0.65rem] font-medium text-secondary">{state.message}</p>
         )}
-      </form>
+      </div>
 
       <Modal
         open={dischargeOpen}
@@ -129,35 +135,49 @@ function StatusForm({ vehicle }: { vehicle: Vehicle }) {
 export function VehicleList({ vehicles }: { vehicles: Vehicle[] }) {
   if (vehicles.length === 0) {
     return (
-      <p className="rounded-2xl bg-panel/70 p-5 text-muted ring-1 ring-border/70">
-        Nenhuma viatura cadastrada.
-      </p>
+      <div className="rounded-xl border border-dashed border-border/80 bg-panel/50 px-5 py-10 text-center">
+        <p className="text-sm font-semibold text-primary">
+          Nenhuma viatura cadastrada
+        </p>
+        <p className="mx-auto mt-1.5 max-w-xs text-xs text-muted">
+          Use &ldquo;Nova viatura&rdquo; no topo para registrar a primeira unidade.
+        </p>
+      </div>
     );
   }
 
   return (
-    <div className="grid gap-3">
+    <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
       {vehicles.map((v) => (
         <article
           key={v.id}
-          className="rounded-2xl bg-panel/85 p-4 shadow-[0_14px_40px_rgba(60,42,30,0.08)] ring-1 ring-border/70 transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_20px_55px_rgba(60,42,30,0.12)] sm:flex sm:items-center sm:justify-between sm:gap-4"
+          className="flex flex-col justify-between gap-3 rounded-xl border border-border/70 bg-panel/80 px-3.5 py-3"
         >
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <h3 className="font-mono text-lg font-semibold tracking-tight text-primary">
-                {v.prefixo}
-              </h3>
+          <div className="min-w-0">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <h3 className="truncate text-[0.95rem] font-semibold leading-snug tracking-tight text-primary">
+                  {v.modelo}
+                </h3>
+                <p className="mt-0.5 font-mono text-sm font-semibold tracking-tight text-primary/80">
+                  {v.prefixo}
+                </p>
+              </div>
               <span
-                className={`rounded-md px-2 py-0.5 text-xs font-semibold uppercase tracking-[0.16em] ring-1 ${VEHICLE_STATUS_COLORS[v.status]}`}
+                className={`shrink-0 rounded px-1.5 py-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.12em] ring-1 ${VEHICLE_STATUS_COLORS[v.status]}`}
               >
                 {VEHICLE_STATUS_LABELS[v.status]}
               </span>
             </div>
-            <p className="mt-1 text-sm text-muted">
-              {v.modelo} · {v.patrimonio} · {v.placa}
+            <p className="mt-2 truncate text-xs text-muted">
+              {v.patrimonio} · {v.placa}
             </p>
           </div>
-          <StatusForm vehicle={v} />
+
+          <div className="flex items-center justify-end gap-1.5 border-t border-border/50 pt-2.5">
+            <EditVehicleModal vehicle={v} compact />
+            <StatusForm vehicle={v} />
+          </div>
         </article>
       ))}
     </div>

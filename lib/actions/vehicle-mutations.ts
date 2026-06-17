@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import {
+  updateVehicleSchema,
   updateVehicleStatusSchema,
   vehicleDischargeReturnSchema,
   vehicleDischargeSchema,
@@ -38,6 +39,57 @@ export async function createVehicle(
     await prisma.vehicle.create({ data: parsed.data });
     revalidateFleetPaths();
     return { success: true, message: "Viatura cadastrada com sucesso." };
+  } catch {
+    return {
+      success: false,
+      message: "Prefixo já cadastrado ou erro ao salvar viatura.",
+    };
+  }
+}
+
+export async function updateVehicle(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  await requireAdmin();
+
+  const raw = {
+    vehicleId: formData.get("vehicleId"),
+    prefixo: formData.get("prefixo"),
+    modelo: formData.get("modelo"),
+    patrimonio: formData.get("patrimonio"),
+    placa: formData.get("placa"),
+  };
+
+  const parsed = updateVehicleSchema.safeParse(raw);
+  if (!parsed.success) {
+    return {
+      success: false,
+      message: "Verifique os campos do formulário.",
+      errors: parsed.error.flatten().fieldErrors as Record<string, string[]>,
+    };
+  }
+
+  const vehicle = await prisma.vehicle.findUnique({
+    where: { id: parsed.data.vehicleId },
+  });
+
+  if (!vehicle) {
+    return { success: false, message: "Viatura não encontrada." };
+  }
+
+  try {
+    await prisma.vehicle.update({
+      where: { id: parsed.data.vehicleId },
+      data: {
+        prefixo: parsed.data.prefixo,
+        modelo: parsed.data.modelo,
+        patrimonio: parsed.data.patrimonio,
+        placa: parsed.data.placa,
+      },
+    });
+    revalidateFleetPaths();
+    return { success: true, message: "Viatura atualizada com sucesso." };
   } catch {
     return {
       success: false,

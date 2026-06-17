@@ -3,6 +3,7 @@ export type { DashboardStats } from "./types";
 
 export {
   createVehicle,
+  updateVehicle,
   updateVehicleStatus,
   dischargeVehicle,
   revertVehicleDischarge,
