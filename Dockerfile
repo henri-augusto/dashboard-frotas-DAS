@@ -13,8 +13,8 @@ ENV NEXT_TELEMETRY_DISABLED=1 \
 FROM base AS deps
 COPY package.json package-lock.json ./
 COPY prisma/schema.prisma prisma/schema.prisma
-RUN --mount=type=cache,target=/root/.npm \
-    npm ci
+RUN --mount=type=cache,target=/root/.npm,id=npm-deps,sharing=locked \
+    npm ci --prefer-offline --no-audit
 
 # Build da aplicação (sem migração de banco — isso roda no entrypoint em runtime)
 FROM base AS builder
@@ -35,8 +35,8 @@ FROM base AS migrator
 WORKDIR /cli
 COPY docker/migrate-package.json ./package.json
 COPY prisma ./prisma
-RUN --mount=type=cache,target=/root/.npm \
-    npm install --omit=dev && \
+RUN --mount=type=cache,target=/root/.npm,id=npm-migrator,sharing=locked \
+    npm install --omit=dev --prefer-offline --no-audit && \
     npm cache clean --force
 
 FROM base AS runner
